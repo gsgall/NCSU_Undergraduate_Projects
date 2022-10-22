@@ -1,10 +1,10 @@
 # NCSU Projects and Code
 This repository is a collection of the projects and other misc. computational work completed during the completion of my major in Nuclear Engineering and minor in Computer Programming. 
-# SULI Summer Internship Project
+## SULI Summer Internship Project
 - Implementation of a Multilayer Perception Deep Neural Network to solve an inverse problem to extend the capabilities of Eddy Current Flow Meters.
   - The project is written in python and uses the Keras and TensorFlow packages for the machine learning model.
 - Journal Publication in Measurement Science and Technology for this work currently under review.
-# Courses Featured
+## Courses Featured
 - CSC 217: Software Development Fundamentals Lab (Java)
   - Lab Work: A course registration system.
 - CSC 230: C and Software Tools (C) 
