@@ -1,0 +1,121 @@
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/k_B.pdf}
+	\caption{Multiplication Factor versus Iterations}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|c|}
+		\hline
+		Group
+		& k \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& Iterations \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		1 & 1.500000e+00 & 1.100000e+01 \\
+		\hline
+	\end{tabu}
+	\caption{Multiplication Factor and Number of Power Iterations}
+\end{table}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/fluxB_1.pdf}
+	\caption{Cell Averaged Scalar Flux versus position in group 1}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/fluxB_2.pdf}
+	\caption{Cell Averaged Scalar Flux versus position in group 2}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/currB_1.pdf}
+	\caption{Cell Edge Current versus position in group 1}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/currB_2.pdf}
+	\caption{Cell Edge Current versus position in group 2}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/fluxB_all.pdf}
+	\caption{Cell Average Flux versus position for all groups}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/currB_all.pdf}
+	\caption{Cell Edge Current versus position for all groups}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/fluxB_sum.pdf}
+	\caption{Total scalar flux versus position}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|c|}
+		\hline
+		Group
+		& \( \Bar{\phi}_{4}\) \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& \( \Bar{\phi}_{124}\) \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		1 & 7.966358e-01 & 7.570080e-01 \\
+		\hline
+		2 & 1.184621e-01 & 3.346381e-01 \\
+		\hline
+	\end{tabu}
+	\caption{Cell Average Scalar Flux versus group \(\Bar{x}_4\) and \(\Bar{x}_{124}\)}
+\end{table}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/fluxB_some.pdf}
+	\caption{Cell Average Flux versus group at \(\Bar{x}_4\) and \(\Bar{x}_{124}\)}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|}
+		\hline
+		Group
+		& J at x = 10 \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		1 & 1.721524e-02 \\
+		\hline
+		2 & -1.721475e-02 \\
+		\hline
+	\end{tabu}
+	\caption{Cell Edge Current versus group at x = 10}
+\end{table}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/currB_some.pdf}
+	\caption{Cell Edge Current versus group at x = 10}
+\end{figure}
+
+

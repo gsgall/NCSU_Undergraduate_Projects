@@ -1,0 +1,7 @@
+N_0 = 1.25e22, 0, 0, 0, 0, 0, 0
+half_lives = 1e9, 2, 2, 500, 1000, 1600, 1
+source = 0, 0, 0, 0, 0, 0, 0
+t_initial = 0
+t_final = 2001
+dt = .5
+units = yr

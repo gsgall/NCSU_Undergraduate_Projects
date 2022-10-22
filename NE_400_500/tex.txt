@@ -1,0 +1,256 @@
+\subsection{Base Case}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/base.pdf}
+	\caption{Base Case Temperature Profile}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|}
+		\hline
+		Fuel Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& Clad Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		2102.0386 & 1019.1844 \\
+		\hline
+	\end{tabu}
+	\caption{Minimum Melting Temperatures for each region}
+\end{table}
+
+
+\subsection{Coolant Temperature Parametric Study}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/Tinf.pdf}
+	\caption{Parametric Study of Coolant Temperature}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|}
+		\hline
+		Fuel Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& Clad Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		2002.0386 & 919.1844 \\
+		\hline
+		2052.0386 & 969.1844 \\
+		\hline
+		2102.0386 & 1019.1844 \\
+		\hline
+		2152.0386 & 1069.1844 \\
+		\hline
+		2202.0386 & 1119.1844 \\
+		\hline
+	\end{tabu}
+	\caption{Minimum Melting Temperatures for each region}
+\end{table}
+
+
+\subsection{Coolant Velocity Parametric Study}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/Uinf.pdf}
+	\caption{Parametric Study of Coolant Velocity}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|}
+		\hline
+		Fuel Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& Clad Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		4345.6141 & 3262.7599 \\
+		\hline
+		2835.5005 & 1752.6463 \\
+		\hline
+		2102.0386 & 1019.1844 \\
+		\hline
+		1730.8319 & 647.9776 \\
+		\hline
+		1699.8845 & 617.0302 \\
+		\hline
+	\end{tabu}
+	\caption{Minimum Melting Temperatures for each region}
+\end{table}
+
+
+\subsection{Cladding Thickness Parametric Study}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/deltaC.pdf}
+	\caption{Parametric Study of Cladding Thickness}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|}
+		\hline
+		Fuel Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& Clad Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		2118.9101 & 1036.0558 \\
+		\hline
+		2110.2903 & 1027.4360 \\
+		\hline
+		2102.0386 & 1019.1844 \\
+		\hline
+		2094.1339 & 1011.2796 \\
+		\hline
+		2086.5562 & 1003.7019 \\
+		\hline
+	\end{tabu}
+	\caption{Minimum Melting Temperatures for each region}
+\end{table}
+
+
+\subsection{Gap Conductance Parametric Study}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/Hg.pdf}
+	\caption{Parametric Study of Gap Resistance}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|}
+		\hline
+		Fuel Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& Clad Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		2428.3484 & 1019.1844 \\
+		\hline
+		2131.7032 & 1019.1844 \\
+		\hline
+		2102.0386 & 1019.1844 \\
+		\hline
+		2099.0722 & 1019.1844 \\
+		\hline
+		2098.7755 & 1019.1844 \\
+		\hline
+	\end{tabu}
+	\caption{Minimum Melting Temperatures for each region}
+\end{table}
+
+
+\subsection{Gap Thickness Parametric Study}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/deltaG.pdf}
+	\caption{Parametric Study of Gap Thickness}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|}
+		\hline
+		Fuel Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& Clad Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		2082.6944 & 1024.7511 \\
+		\hline
+		2092.3380 & 1021.9404 \\
+		\hline
+		2102.0386 & 1019.1844 \\
+		\hline
+		2111.7946 & 1016.4815 \\
+		\hline
+		2121.6041 & 1013.8301 \\
+		\hline
+	\end{tabu}
+	\caption{Minimum Melting Temperatures for each region}
+\end{table}
+
+
+\subsection{Fuel Outer Radius Parametric Study}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/Rfoc.pdf}
+	\caption{Parametric Study of Outer Fuel Radius}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|}
+		\hline
+		Fuel Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& Clad Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		1075.5886 & 770.1768 \\
+		\hline
+		1500.3227 & 885.4219 \\
+		\hline
+		2102.0386 & 1019.1844 \\
+		\hline
+		2908.5634 & 1169.7241 \\
+		\hline
+		3948.4829 & 1335.6502 \\
+		\hline
+	\end{tabu}
+	\caption{Minimum Melting Temperatures for each region}
+\end{table}
+
+
+\subsection{Volumetric Heat Generation Rate Parametric Study}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/q.pdf}
+	\caption{Parametric Study of Volumetric Heat Generation Rate}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|}
+		\hline
+		Fuel Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& Clad Melt Temperature \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		1857.3584 & 950.8998 \\
+		\hline
+		1979.6695 & 985.0340 \\
+		\hline
+		2101.9807 & 1019.1682 \\
+		\hline
+		2224.2918 & 1053.3024 \\
+		\hline
+		2346.6029 & 1087.4366 \\
+		\hline
+	\end{tabu}
+	\caption{Minimum Melting Temperatures for each region}
+\end{table}
+
+

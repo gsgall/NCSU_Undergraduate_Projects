@@ -1,0 +1,58 @@
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/k_A.pdf}
+	\caption{Multiplication Factor versus Iterations}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|c|}
+		\hline
+		Group
+		& k \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& Iterations \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		1 & 1.147588e+00 & 3.000000e+00 \\
+		\hline
+	\end{tabu}
+	\caption{Multiplication Factor and Number of Power Iterations}
+\end{table}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.7]{additional_items/spec_A.pdf}
+	\caption{Cell Averaged Scalar Flux versus group}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\begin{tabu}{|c|c|c|}
+		\hline
+		Group
+		& \(\phi\) at x = 0 \(\left[ \frac{\text{}}{\text{}} \right]\)
+		& \(\Bar{\phi}_5\) \(\left[ \frac{\text{}}{\text{}} \right]\)
+		\\
+		\hline
+		1 & 7.174683e-02 & 7.174683e-02 \\
+		\hline
+		2 & 8.896544e-01 & 8.896544e-01 \\
+		\hline
+		3 & 3.790249e-02 & 3.790249e-02 \\
+		\hline
+		4 & 6.790408e-04 & 6.790408e-04 \\
+		\hline
+		5 & 1.700486e-05 & 1.700486e-05 \\
+		\hline
+		6 & 2.120989e-07 & 2.120989e-07 \\
+		\hline
+		7 & 3.738368e-09 & 3.738368e-09 \\
+		\hline
+	\end{tabu}
+	\caption{Normalized Cell Averaged Scalar Flux at \( \Bar{x}_5 \)}
+\end{table}
+
+

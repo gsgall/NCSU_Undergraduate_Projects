@@ -1,0 +1,7 @@
+N_0 = 3.6e10, 0
+half_lives = 10, 0.4
+source = 0, 0
+t_initial = 0
+t_final = 50
+dt = 1
+units = hr
