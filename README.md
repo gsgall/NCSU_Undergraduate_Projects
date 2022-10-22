@@ -20,3 +20,6 @@ This repository is a collection of the projects and other misc. computational wo
   - The project is a numeric solution of the multi-group diffusion equation in 1D slab geometry with the objective of calculating the multiplaction factor and fundamental mode of the neutron flux. 
 - NE 400/500: Reactor Energy Conservation (MATLAB) 
   - This project is a parametric study of the temperature distribution of a hollow spherical fuel pellet.
+- NE 502 Reactor Engineering (python)
+  - UNDER DEVELOPMENT 
+  - This project determines core pressure drop to ensure theraml limits and critical power ratio.
