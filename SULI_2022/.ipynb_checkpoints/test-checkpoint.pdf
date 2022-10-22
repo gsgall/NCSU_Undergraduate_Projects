@@ -1,0 +1,76 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "fcc4b87c",
+   "metadata": {
+    "tags": [
+     "{",
+     "\"tags\":",
+     "[",
+     "\"hide-input\"",
+     "]",
+     "}"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import random as rand\n",
+    "from numpy import genfromtxt\n",
+    "from IPython.display import Markdown as md\n",
+    "\n",
+    "matrix_file = 'ECFM_matrix.csv'\n",
+    "frequency_file = 'ECFM_freq.csv'\n",
+    "position_file = 'ECFM_rad.csv'\n",
+    "\n",
+    "A = np.vectorize(lambda t:complex(t.replace('i','j'))) (genfromtxt(matrix_file, delimiter=',',dtype='str'))\n",
+    "rad_pos = np.loadtxt(position_file, delimiter=',')\n",
+    "freq = np.loadtxt(frequency_file, delimiter=',')\n",
+    "num_observations = 150"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "eac6dcb2",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "61b8c293",
+   "metadata": {},
+   "source": []
+  }
+ ],
+ "metadata": {
+  "celltoolbar": "Tags",
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.13"
+  },
+  "vscode": {
+   "interpreter": {
+    "hash": "11dca0ba5582f67230cc1114175b2f8ee424e4b65611b5aed3a66c89536bd575"
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

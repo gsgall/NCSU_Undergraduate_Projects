@@ -1,0 +1,13 @@
+phase_scale_factor = None 
+sensitivity_scale_factor = 0.0019024033405370025
+min_vel = 0
+max_vel = 5
+num_training_samples = 823543
+num_test_samples = 128
+nodes_per_layer = 66
+num_hidden_layers = 2
+hidden_layer_activation = selu
+num_epochs = 30
+batch_size = None
+learning_rate = 1.000000E-03
+optimizer = adam

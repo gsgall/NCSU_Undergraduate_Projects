@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../MATLAB-Drive"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
+}
