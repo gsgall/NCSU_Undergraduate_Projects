@@ -2,17 +2,18 @@
 This repository is a collection of the projects and other misc. computational work completed during the completion of my major in Nuclear Engineering and minor in Computer Programming. 
 # SULI Summer Internship Project (python) 
 - Implementation of a Multilayer Perception Deep Neural Network to solve an inverse problem to extend the capabilities of Eddy Current Flow Meters.
-- Journal Publication in Measurement Science and Technology for this work currently under review
+  - The project is written in python and uses the Keras and TensorFlow packages for the machine learning model.
+- Journal Publication in Measurement Science and Technology for this work currently under review.
 # Courses Featured
 - CSC 217: Software Development Fundamentals Lab (Java)
   - Lab Work: A course registration system.
 - CSC 230: C and Software Tools (C) 
-  - Project 1: Shows the increasing accuracy of taylor series approximations as higher order terms are added to calculate the value of trig functions. Project also includes formatting of given text in a box of *'s 
+  - Project 1: Shows the increasing accuracy of taylor series approximations as higher order terms are added to calculate the value of trig functions. Project also includes formatting of given text in a box of *'s.
   - Project 2: Interprets and evaluates basic algebraic expressions in base 10 and base 25.
   - Project 3: The game Wordle.
   - Project 4: A data base of employees, their skills and availability.
   - Project 5: Program for encoding and decoding txt files using bitwise operations.
-  - Project 6: Implementation of a Hash Map with String Keys and Integer Values 
+  - Project 6: Implementation of a Hash Map with String Keys and Integer Values.
 - CSC 316: Data Structures and Algorithms (Java)
   - Course Work: Implementations of various data structures and algorithms. 
   - Project: A trail manager designed to find all possible paths from a given starting location and the distance from the start location and then end location. Also includes a performance study based on changing the implementation of the data structures that are used. 
