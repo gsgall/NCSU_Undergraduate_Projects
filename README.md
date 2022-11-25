@@ -13,7 +13,7 @@ This repository is a collection of the projects and other misc. computational wo
   - Project 3: The game Wordle.
   - Project 4: A data base of employees, their skills and availability.
   - Project 5: Program for encoding and decoding txt files using bitwise operations.
-  - Project 6: Implementation of a Hash Map with String Keys and Integer Values.
+  - Project 6: Implementation of a Hash Map with string keys and integer values.
 - CSC 316: Data Structures and Algorithms (Java)
   - Course Work: Implementations of various data structures and algorithms. 
   - Project: A trail manager designed to find all possible paths from a given starting location and the distance from the start location and then end location. Also includes a performance study based on changing the implementation of the data structures that are used. 
