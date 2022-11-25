@@ -13,6 +13,7 @@ plt.rcParams['font.family'] = 'STIXGeneral'
 
 
 
+
 def calc_sg_location(N_sg, H_f): 
     locations = np.linspace(0, H_f.value, N_sg + 2)
     locations = locations[1:-1] * ui.ft 
@@ -90,27 +91,6 @@ def qpp_crit_CISE_4(gamma_f, mdot, h_f, h_in, D, H_0, H_f, lambda_, int_shape):
     qpp_crit = num / denom
     return qpp_crit
 
-def calc_G(deltaP, H, n_sg, K_sg, K_dc, K_in, K_out, fbar, De, rho_bar, rho_in, rho_out): 
-    g_c = 32.17 * ui.lbm * ui.ft / (ui.lbf * u.s**2) 
-    g = 32.17 * ui.ft / u.s**2
-    dP_term = g_c * deltaP - rho_bar * g * H
-    local_terms = n_sg * K_sg / (2 * rho_bar) + K_dc / (2 * rho_bar) + K_in / (2 * rho_in) + K_out / (2 * rho_out)
-    friction_term = fbar * H / (De * 2 * rho_bar)
-
-    G = np.sqrt(dP_term * (local_terms + friction_term)**-1)
-    return G.to(ui.lbm / (ui.ft**2 * u.h))
-
-def calc_deltaP(G, H, n_sg, K_sg, K_dc, K_in, K_out, fbar, De, rho_bar, rho_in, rho_out): 
-    g_c = 32.17 * ui.lbm * ui.ft / (ui.lbf * u.s**2) 
-    g = 32.17 * ui.ft / u.s**2
-
-    local_terms = n_sg * K_sg / (2 * rho_bar) + K_dc / (2 * rho_bar) + K_in / (2 * rho_in) + K_out / (2 * rho_out)
-    friction_term = fbar * H / (De * 2 * rho_bar)
-    elevation_term = rho_bar * g * H/ g_c 
-
-    deltaP = G**2 / g_c * (local_terms + friction_term) + elevation_term
-
-    return deltaP.to(ui.psi)
 
 def enthalpy_profile(z, qpp, H, D, mdot, lambda_, h_0, gamma_f=1): 
     He = H + 2 * lambda_
@@ -123,7 +103,36 @@ def enthalpy_profile(z, qpp, H, D, mdot, lambda_, h_0, gamma_f=1):
     return h_0 + qpp * He * D / (gamma_f * mdot) * (omega_terms - omega2_terms)
 
 
+def shape(z, H, lambda_): 
+    H_e = H + 2 * lambda_ 
+    omega = (pi * (H + lambda_ - z) / H_e) * u.rad
+    return omega.value * np.sin(omega)
 
+def heat_flux(z, qpp_0, H, lambda_): 
+    return qpp_0 * shape(z, H, lambda_)
+
+def fluid_temp(z, H, lambda_, qpp_0, D, T_in, mdot, Cp, gamma_f): 
+    return T_in + (pi * D / (gamma_f * mdot * Cp)) * qpp_0 * int_shape(0 * ui.ft, z, H, lambda_)
+
+def fuel_surface_temp(z, T_in, D, mdot, Cp, qpp, lambda_, H, gamma_f, R_o, R_i, H_G, k_c, h_c): 
+    T_inf = fluid_temp(z, H, lambda_, qpp, D, T_in, mdot, Cp, gamma_f)
+    qpp_z = heat_flux(z, qpp, H, lambda_)
+    return T_inf + qpp_z * R_o * (1 / (H_G * R_i) + 1 / k_c * np.log(R_o / R_i) + 1 / (h_c * R_o))
+
+
+def hc_Weisman(G, Ax, D, S, mu, Cp, k): 
+    C = 0.042 * S / D - 0.024 
+    De = 4 * Ax / (pi * D)
+    Re = G * De / mu
+    Pr = Cp * mu / k 
+    Nu = C * Re**0.8 * Pr**(1/3)
+    hc = k * Nu / De 
+    hc = hc.value 
+    return hc * ui.BTU / (ui.ft**2 * u.hr * ui.deg_F)
+
+def condutivity_int_UO2(T): 
+    ans = 3978.1 * np.log((692.6 + T.value) / 692.6) + 6.02366e-12 / 4 * ((T.value - 460)**4 - 460**4) 
+    return ans * ui.BTU / (u.hr * ui.ft)
 
 def calc_qpp_bar(gamma_f, n, D, Qdot, H, lambda_): 
     qpp = gamma_f * Qdot / (n * pi * D * int_shape(0, H, H, lambda_))
