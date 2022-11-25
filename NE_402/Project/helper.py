@@ -11,6 +11,85 @@ plt.rcParams['text.usetex'] = True
 plt.rcParams['mathtext.fontset'] = 'stix'
 plt.rcParams['font.family'] = 'STIXGeneral'
 
+
+
+def calc_sg_location(N_sg, H_f): 
+    locations = np.linspace(0, H_f.value, N_sg + 2)
+    locations = locations[1:-1] * ui.ft 
+    return locations
+
+def a_CISE_4(G, P, P_c): 
+    G = G.to(u.kg / (u.m**2 * u.s))
+    G = G.value 
+    P = P.to(u.MPa)
+    P = P.value
+    P_c = P_c.to(u.MPa)
+    P_c = P_c.value 
+    if G <= 3375 * ( 1 - (P / P_c))**3:
+        return (1 / (1 + 1.481e-4 * (1 - (P / P_c))**(-3) * G))
+    else: 
+        return ((1 - (P / P_c)) / (G / 1000)**(1/3))
+
+def b_CISE_4(D, G, P, P_c): 
+    D = D.to(u.m)
+    G = G.to(u.kg / (u.m**2 * u.s))
+    P = P.to(u.MPa)
+    P_c = P_c.to(u.MPa)
+    b = ((0.199 * ((P_c / P) - 1)**0.4 * G * D**1.4).value) * u.m 
+    return b
+
+def non_boiling_height_BOC_CISE_4(D, G, P, P_c, H, lambda_, T_in, D_e, D_h, int_shape, show=False):   
+    steamTableLocal = XSteam(XSteam.UNIT_SYSTEM_MKS)
+    a = a_CISE_4(G, P, P_c) 
+    b = b_CISE_4(D, G, P, P_c)
+
+    D_e = D_e.to(u.m)
+    D_h = D_h.to(u.m)
+    D = D.to(u.m)
+    G = G.to(u.kg / (u.m**2 * u.s))
+    P = P.to(u.MPa)
+    P_c = P_c.to(u.MPa)
+    H = H.to(u.m)
+    lambda_ = lambda_.to(u.m)
+    T_in = T_in.to(u.deg_C, equivalencies=u.temperature())
+
+    H_range = np.arange(1e-3, H.value, 1e-3) * u.m 
+    h_f = steamTableLocal.hL_p((P.to(u.bar)).value) * u.kJ / u.kg
+    h_g = steamTableLocal.hV_p((P.to(u.bar)).value) * u.kJ / u.kg
+    h_in = steamTableLocal.h_pt((P.to(u.bar)).value, (T_in.value)) * u.kJ / u.kg
+    lhs = (D_h / D_e) * (a * (H - H_range) / (H - H_range + b))
+    rhs = (h_f - h_in) / (h_g - h_f) * int_shape(H_range, H, H, lambda_) / int_shape(0, H_range, H, lambda_)
+    
+    idx = np.where(lhs.value < rhs.value)[0][-1]
+    H_0 = H_range[idx]
+    
+    if show: 
+        print_value('H_0', H_0)
+        print_value('H_0', H_0.to(ui.ft))
+        plt.figure() 
+        plt.plot(H_range, lhs)
+        plt.plot(H_range, rhs)
+        #plt.plot(H_0, lhs[idx], '*k')
+        plt.xlabel('$H_0$ [m]')
+        plt.ylim((0, 1))
+        plt.title('Non-Boiling Height by Intersection')
+        plt.legend(['LHS', 'RHS', 'Intersection'])
+        plt.savefig('H_0.pdf', format='pdf', bbox_inches='tight')
+        plt.show() 
+    return H_0
+
+def mdot_CISE_4(qpp_crit, D, H_0, H_f, lambda_, h_f, h_in, gamma_f, int_shape):
+    num = qpp_crit * pi * D * int_shape(0 * ui.ft, H_0, H_f, lambda_)
+    denom = gamma_f * (h_f - h_in)  
+    mdot = (num / denom).to(ui.lbm / u.hr)
+    return mdot 
+
+def qpp_crit_CISE_4(gamma_f, mdot, h_f, h_in, D, H_0, H_f, lambda_, int_shape): 
+    num = gamma_f * mdot * (h_f - h_in)
+    denom = pi * D * int_shape(0 * ui.ft, H_0, H_f, lambda_)
+    qpp_crit = num / denom
+    return qpp_crit
+
 def calc_G(deltaP, H, n_sg, K_sg, K_dc, K_in, K_out, fbar, De, rho_bar, rho_in, rho_out): 
     g_c = 32.17 * ui.lbm * ui.ft / (ui.lbf * u.s**2) 
     g = 32.17 * ui.ft / u.s**2
