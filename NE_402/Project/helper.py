@@ -15,6 +15,46 @@ steamTable = XSteam(XSteam.UNIT_SYSTEM_FLS)
 g_c = 32.17 * ui.lbm * ui.ft / (u.s**2 * ui.lbf) 
 g = 32.17 * ui.ft / u.s**2
 
+def fuel_centerline_profile(T_s, T_range, z_range, qpp_0, H_f, lambda_, R_o): 
+    T_o = np.zeros(z_range.shape) * T_s.unit
+    for i, z in enumerate(z_range): 
+        lhs = condutivity_int_UO2(T_range) - condutivity_int_UO2(T_s[i])
+        rhs = heat_flux(z, qpp_0, H_f, lambda_) * R_o / 2 
+        idx = np.where(lhs.value < rhs.value)[0][-1]
+        T_o[i] = T_range[idx]
+    return T_o
+
+def zuber_findlay(G, x, rho_g, rho_l): 
+    if x == 0: 
+        return 0
+    C_0, V_g = dix(x, rho_g, rho_l)
+    alpha_g = 1 / (C_0 * (1 + (1 - x) / x * (rho_g / rho_l)) + rho_g * V_g / (G * x))
+    return alpha_g 
+
+def dix(x, rho_g, rho_l): 
+    b = (rho_g / rho_l) ** 0.1
+    beta = x / (x + (1 - x) * rho_g / rho_l)
+    C_0 = beta * (1 + (1 / beta - 1) ** b) 
+    sigma = 1.2e-3 * ui.lb / ui.ft 
+    g = 32.17 * ui.ft / u.s**2
+    g_c = 32.17 * ui.ft / u.s**2
+    V_g = 2.9 * ((sigma * g * g_c * (rho_l - rho_g)) / rho_l**2) ** (1/4)
+    return C_0, V_g 
+
+
+def clad_temp(z, H_f, lambda_, T_in,  qpp_0, hc, D, mdot, Cp, gamma_f): 
+    T_inf = fluid_temp(z, H_f, lambda_, qpp_0, D, T_in, mdot, Cp, gamma_f)
+    T_clad = T_inf + heat_flux(z, qpp_0, H_f, lambda_) / hc
+    return T_clad 
+
+def clad_temp_jens_lottes(z, qpp_0, H_f, lambda_, P, T_sat):
+    return T_sat + (1.897 * heat_flux(z, qpp_0, H_f, lambda_)**(1/4) * np.exp(-P.value / 900)).value * ui.deg_F
+    
+def fuel_surface_temp(z, qpp, P, T_sat, lambda_, H, R_o, R_i, H_G, k_c): 
+    T_clad = clad_temp_jens_lottes(z, qpp, H, lambda_, P, T_sat)
+    qpp_z = heat_flux(z, qpp, H, lambda_)
+    return T_clad + qpp_z * R_o * (1 / (H_G * R_i) + 1 / k_c * np.log(R_o / R_i))
+
 def calc_pump_HP(n_p, rho_bar, mdot_core, deltaP, nu=0.75):
     mdot_pump = mdot_core / n_p 
     W = (mdot_pump * deltaP / rho_bar).to(ui.lbf * ui.ft / u.s)
@@ -22,64 +62,24 @@ def calc_pump_HP(n_p, rho_bar, mdot_core, deltaP, nu=0.75):
     return W 
 
 def martinelli_multiplier(x, mu_f, mu_g, rho_f, rho_g):
-    if x <= 0: 
-        return 1
+    #if x <= 0: 
+    #   return 1
 
-    chi_2 = (mu_f / mu_g)**(0.2) * ((1 - x) / x)**1.8 * (rho_g / rho_f)
+    chi_2 = (mu_f / mu_g)**(0.2) * ((1 - x) / x)**(1.8) * (rho_g / rho_f)
     chi = np.sqrt(chi_2)
     phi_2 = (1 + (20 / chi) + (1 / chi_2)) * (1 - x)**(1.8)
-    return phi_2
+    return (1 + phi_2) / 2.2 
 
-def homogeneous_multiplier(x, rho_l, rho_f, rho_g): 
+def homogeneous_multiplier(z, H_0, x, rho_l, rho_f, rho_g): 
+    if z < H_0: 
+        return 1 
     if x <= 0: 
         return 1 
     v_f = 1 / rho_f
     v_lg = (1 / rho_g) - (1 / rho_l)
     term1 = rho_f / rho_l 
-    term2 = 0 
-    if x > 0: 
-        term2 = v_lg / v_f * x
+    term2 = (v_lg / v_f) * x
     return term1 + term2 
-
-
-def calc_b(rho_l, P): 
-    rho_g = steamTable.rhoV_p(P.value) * ui.lbm / ui.ft**3
-    return (rho_g / rho_l)**(0.1)
-
-def calc_beta(x, rho_l, P): 
-    rho_g = steamTable.rhoV_p(P.value) * ui.lbm / ui.ft**3
-    return x / (x + (1 - x) * rho_g / rho_l)
-
-def calc_V_gj(rho_l, P): 
-    rho_g = steamTable.rhoV_p(P.value) * ui.lbm / ui.ft**3
-    sigma = steamTable.st_p(P.value) * ui.lbf / ui.ft
-    g_c = 32.17 * ui.lbm * ui.ft / (u.s**2 * ui.lbf) 
-    g = 32.17 * ui.ft / u.s**2
-    numer = sigma * g * g_c * (rho_l - rho_g) 
-    denom = rho_l**2 
-    return 2.9 * (numer / denom)**(1/4)
-
-def calc_C_0(beta, b): 
-    return beta * (1 + ((1 / beta) - 1))**b
-
-def alpha_zuber_findlay(x, rho_l, G, P): 
-    alpha = np.zeros(x.shape)
-    idx = np.where(x > 0)
-    rho_g = steamTable.rhoV_p(P.value) * ui.lbm / ui.ft**3
-    valid_x = x[idx]
-    valid_rho_l = rho_l[idx]
-    b = calc_b(valid_rho_l, P)
-    beta = calc_beta(valid_x, valid_rho_l, P)
-    V_gj = calc_V_gj(valid_rho_l, P)
-    C_0 = calc_C_0(beta, b)
-
-    term1 = (1 - valid_x) / valid_x * (rho_g / valid_rho_l)
-    term2 = rho_g * V_gj / (G * valid_x)
-    denom = C_0 * (1 + term1) + term2 
-    alpha_valid = 1 / denom
-
-    alpha[idx] = alpha_valid
-    return alpha 
 
 def deltaP_f_norm_dc(f, De, H_c, rho_in): 
     return f * (H_c / De)  / (2 * rho_in)
@@ -87,47 +87,77 @@ def deltaP_f_norm_dc(f, De, H_c, rho_in):
 def deltaP_local_norm_dc(K_dc, rho_in): 
     return K_dc / (2 * rho_in)
     
-def detlaP_f_norm(f, D_e, x_bar, mu_f, mu_g, rho_f, rho_g, H_0, H_f): 
+def detlaP_f_norm(f, D_e, x_bar, mu_f, mu_g, rho_f, rho_g, H_0, H_f, show=False, G=0): 
     multiplier = martinelli_multiplier(x_bar, mu_f, mu_g, rho_f, rho_g)
-    return (f / D_e) * (1 / (2 * rho_f)) * (H_0 + (H_f - H_0) * multiplier)
+    dP = (f / D_e) * (1 / (2 * rho_f)) * (H_0 + (H_f - H_0) * multiplier)
+    if show: 
+        print('Core Friction')
+        print('Loss = {:f} Quality = {:f} Multiplier = {:f}'.format((dP * G**2 / g_c).to(ui.psi), x_bar, multiplier))
+        print()
+    return dP
 
-def deltaP_local_norm(rho_l_array, rho_f, rho_g, K_array, x_array): 
+def deltaP_local_norm(loss_array, H_0, rho_l_array, rho_f, rho_g, K_array, x_array, show=False, G=0): 
     multipliers = np.zeros(K_array.shape)
 
     for i in range(x_array.size): 
-        multipliers[i] = homogeneous_multiplier(x_array[i], rho_l_array[i], rho_f, rho_g)
-    return (1 / (2 * rho_f)) * np.sum(K_array * multipliers)
+        multipliers[i] = homogeneous_multiplier(loss_array[i], H_0, x_array[i], rho_l_array[i], rho_f, rho_g)
+
+    dP = (1 / (2 * rho_f)) * K_array * multipliers
+    if show:
+        print("Local Core Losses")
+        for i in range(dP.size): 
+            print('Loss: {:d} = {:f} Quality = {:f} Multiplier: {:f}'.format(i, (G**2 / g_c * dP[i]).to(ui.psi), x_array[i], multipliers[i]))
+
+    return  np.sum(dP)
 
 def delatP_elev(rho_bar, H_c): 
     return rho_bar * g / g_c * H_c 
 
-def dP_from_G(G, G_dc, f, f_dc, D_e, De_dc, H_0, H_f, H_c, x_bar, rho_bar, rho_f, rho_g, mu_f, mu_g, rho_l_array, K_array, K_dc,  x_array, rho_in): 
-    dP_f_norm = detlaP_f_norm(f, D_e, x_bar, mu_f, mu_g, rho_f, rho_g, H_0, H_f)
-    dP_f_norm_dc = deltaP_f_norm_dc(f_dc, De_dc, H_c, rho_in)
-    dP_local_norm = deltaP_local_norm(rho_l_array, rho_f, rho_g, K_array, x_array)
+def dP_from_G(G, G_dc, f, f_dc, D_e, De_dc, H_0, H_f, H_c, x_bar, rho_bar, rho_f, rho_g, mu_f, mu_g, rho_l_array, K_array, K_dc,  x_array, rho_in, loss_array, show=False): 
+    dP_f_norm = detlaP_f_norm(f, D_e, x_bar, mu_f, mu_g, rho_f, rho_g, H_0, H_f, show, G)
+    dP_local_norm = deltaP_local_norm(loss_array, H_0, rho_l_array, rho_f, rho_g, K_array, x_array, show, G)
+    dP_f_norm_dc = deltaP_f_norm_dc(f_dc, De_dc, H_c + H_f, rho_in)
     dP_local_norm_dc = deltaP_local_norm_dc(K_dc, rho_in)
     dP_dc = (G_dc**2 / g_c) * (dP_f_norm_dc + dP_local_norm_dc)
     dP_part = (G**2 / g_c) * (dP_f_norm + dP_local_norm)
-    dP_elev = delatP_elev(rho_bar, H_c)
+    # elevation losses 
+    dP_elev_c = delatP_elev(rho_bar, H_c)
     dP_elev_dc = delatP_elev(rho_in, H_c)
+    if show: 
+        print() 
+        print_value('Local Core', ((G**2 / g_c) * dP_local_norm).to(ui.psi))
+        print_value('f Downcomer', ((G_dc**2 / g_c) * dP_f_norm_dc).to(ui.psi))
+        print_value('Local Downcomer', ((G_dc**2 / g_c) * dP_local_norm_dc).to(ui.psi))
+        print_value('Core Elevation', dP_elev_c.to(ui.psi))
+        print_value('Downcomer Elevation', dP_elev_dc.to(ui.psi))
+        print() 
+
+    dP_elev = dP_elev_c - dP_elev_dc
     dP = (dP_part + dP_dc + (dP_elev - dP_elev_dc)).to(ui.psi)
     return dP
 
-def G_from_DP(deltaP, n, Ax_c, Ax_dc, f, f_dc, D_e, De_dc, H_0, H_f, H_c, x_bar, rho_bar, rho_f, rho_g, mu_f, mu_g, rho_l_array, K_array, K_dc, x_array, rho_in): 
+def G_from_DP(deltaP, G_dc, f, f_dc, D_e, De_dc, H_0, H_f, H_c, x_bar, rho_bar, rho_f, rho_g, mu_f, mu_g, rho_l_array, K_array, K_dc, x_array, rho_in, loss_array): 
     dP_f_norm = detlaP_f_norm(f, D_e, x_bar, mu_f, mu_g, rho_f, rho_g, H_0, H_f)
-    dP_f_norm_dc = deltaP_f_norm_dc(f_dc, De_dc, H_c, rho_in)
-    dP_local_norm = deltaP_local_norm(rho_l_array, rho_f, rho_g, K_array, x_array)
+    dP_local_norm = deltaP_local_norm(loss_array, H_0, rho_l_array, rho_f, rho_g, K_array, x_array)
+    dP_f_norm_dc = deltaP_f_norm_dc(f_dc, De_dc, H_c + H_f, rho_in)
     dP_local_norm_dc = deltaP_local_norm_dc(K_dc, rho_in)
-    dP_norm_dc = (n * Ax_c) / (Ax_dc) * (dP_f_norm_dc + dP_local_norm_dc)
-    dP_norm = dP_f_norm + dP_local_norm + dP_norm_dc
-    dP_elev = delatP_elev(rho_bar, H_c)
+    dP_dc = (G_dc**2 / g_c) * (dP_f_norm_dc + dP_local_norm_dc)
+    dP_part = (dP_f_norm + dP_local_norm)
+    # elevation losses 
+    dP_elev_c = delatP_elev(rho_bar, H_c)
     dP_elev_dc = delatP_elev(rho_in, H_c)
-    G = np.sqrt((g_c * deltaP - (dP_elev - dP_elev_dc)) / (dP_norm))
+    dP_elev = dP_elev_c - dP_elev_dc
+    numer = g_c * (deltaP - (dP_elev + dP_dc))
+    denom = dP_part 
+    G = np.sqrt(numer / denom)
     G = G.to(ui.lbm / (ui.ft**2 * u.hr))
     return G 
     
 def x_e(h, h_f, h_fg): 
-    return (h - h_f) / h_fg 
+    x = (h - h_f) / h_fg 
+    if x < 0: 
+        return 0
+    return x
 
 
 def calc_h_in(n, mdot_fd, h_fd, mdot_channel, h_f): 
@@ -234,12 +264,6 @@ def heat_flux(z, qpp_0, H, lambda_):
 def fluid_temp(z, H, lambda_, qpp_0, D, T_in, mdot, Cp, gamma_f): 
     return T_in + (pi * D / (gamma_f * mdot * Cp)) * qpp_0 * int_shape(0 * ui.ft, z, H, lambda_)
 
-def fuel_surface_temp(z, T_in, D, mdot, Cp, qpp, lambda_, H, gamma_f, R_o, R_i, H_G, k_c, h_c): 
-    T_inf = fluid_temp(z, H, lambda_, qpp, D, T_in, mdot, Cp, gamma_f)
-    qpp_z = heat_flux(z, qpp, H, lambda_)
-    return T_inf + qpp_z * R_o * (1 / (H_G * R_i) + 1 / k_c * np.log(R_o / R_i) + 1 / (h_c * R_o))
-
-
 def hc_Weisman(G, Ax, D, S, mu, Cp, k): 
     C = 0.042 * S / D - 0.024 
     De = 4 * Ax / (pi * D)
@@ -340,7 +364,7 @@ def find_intersection(lhs, rhs, precision, show=True):
     return idx
 
 def print_value(str, value): 
-    print(str, '= {:0.2E}'.format(value))
+    print(str, '= {:0.6E}'.format(value))
 
 def find_lambda(D, H, F_z): 
     omega = find_omega(1e-6, 5)
